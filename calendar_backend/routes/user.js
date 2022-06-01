@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { User } = require("../modules/user");
 const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
+const stringUtil = require('../util/stringUtil');
 
 // const { auth } = require("../middleware/auth");
 
@@ -26,24 +27,26 @@ const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
 
 router.post("/register", (req, res) => {
   // console.log(req.body);
+  if(stringUtil.isEmpty(req.body.email) || stringUtil.isEmpty(req.body.password)) {
+    return jsonFail(res, '입력되지 않은 값이 있습니다.');
+  }
 
-  if (req.body.password !== undefined && req.body.password !== "") {
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if (user) return jsonFail(res, '이미 존재하는 이메일입니다.');
+
     bcrypt.genSalt(saltRounds, (err, salt) => {
-      console.log(req.body.password);
-      if (err) return jsonFail(res, err);
-      bcrypt.hash(req.body.password, salt, function (err, hash) {
         if (err) return jsonFail(res, err);
-        req.body.password = hash;
-        const user = new User(req.body);
-        user.save((err, doc) => {
+        bcrypt.hash(req.body.password, salt, function (err, hash) {
           if (err) return jsonFail(res, err);
-          return jsonSuccess(res);
+          req.body.password = hash;
+          const user = new User(req.body);
+          user.save((err, doc) => {
+            if (err) return jsonFail(res, err);
+            return jsonSuccess(res);
+          });
         });
       });
-    });
-  } else {
-    return jsonFail(res, "비밀번호를 입력해주세요.");
-  }
+  })
 });
 
 router.post("/login", (req, res) => {
