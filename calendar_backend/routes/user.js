@@ -3,8 +3,8 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { User } = require("../modules/user");
+const { getToken, verify } = require("../util/jwtUtil");
 const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
-const stringUtil = require('../util/stringUtil');
 
 // const { auth } = require("../middleware/auth");
 
@@ -25,16 +25,36 @@ const stringUtil = require('../util/stringUtil');
 //   });
 // });
 
+router.get("/auth", (req, res) => {
+  console.log(req.headers);
+  req.headers = req.headers || {};
+  req.headers.authorization =
+    req.headers.authorization == undefined ? "" : req.headers.authorization;
+
+  console.log(req.headers.authorization.split("Bearer ")[1] || "");
+
+  verify(
+    req.headers.authorization.split("Bearer ")[1] || "",
+    (result, message, info) => {
+      if (!result) {
+        console.log(message);
+        return jsonFail(res, "로그인 후 이용 가능합니다.");
+      }
+      console.log("info: ", info);
+      return jsonSuccessInfo(res, { id: info.id || "", role: info.role || "" });
+    }
+  );
+});
+
 router.post("/register", (req, res) => {
   // console.log(req.body);
-  if(stringUtil.isEmpty(req.body.email) || stringUtil.isEmpty(req.body.password)) {
-    return jsonFail(res, '입력되지 않은 값이 있습니다.');
-  }
 
-  User.findOne({ email: req.body.email }, (err, user) => {
-    if (user) return jsonFail(res, '이미 존재하는 이메일입니다.');
+  if (req.body.password !== undefined && req.body.password !== "") {
+    User.findOne({ email: req.body.email }, (err, user) => {
+      if (user) return jsonFail(res, "이미 존재하는 이메일입니다.");
 
-    bcrypt.genSalt(saltRounds, (err, salt) => {
+      bcrypt.genSalt(saltRounds, (err, salt) => {
+        console.log(req.body.password);
         if (err) return jsonFail(res, err);
         bcrypt.hash(req.body.password, salt, function (err, hash) {
           if (err) return jsonFail(res, err);
@@ -46,7 +66,10 @@ router.post("/register", (req, res) => {
           });
         });
       });
-  })
+    });
+  } else {
+    return jsonFail(res, "비밀번호를 입력해주세요.");
+  }
 });
 
 router.post("/login", (req, res) => {
@@ -64,17 +87,8 @@ router.post("/login", (req, res) => {
     bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
       if (err) return jsonFail(res, err);
 
-      console.log(isMatch);
-
       if (isMatch) {
-        user.generateToken((err, user) => {
-          if (err) return res.status(400).send(err);
-          res.cookie("w_authExp", user.tokenExp);
-          res.cookie("w_auth", user.token).status(200).json({
-            success: true,
-            userId: user._id,
-          });
-        });
+        return jsonSuccessInfo(res, { accessToken: getToken(user) });
       } else {
         return jsonFail(res, "비밀번호가 일치하지 않습니다.");
       }

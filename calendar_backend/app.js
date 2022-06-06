@@ -1,13 +1,14 @@
 const express = require("express");
 const app = express();
 const bodyParse = require("body-parser");
+const cors = require("cors");
 
 const port = 5000;
 const host = "localhost";
 
 const { User } = require("./modules/user");
 
-const config = require("./config/mongoDb");
+const config = require("./config/serverConfig");
 
 const mongoose = require("mongoose");
 mongoose
@@ -24,6 +25,13 @@ app.listen(port, () => {
 
 app.use(bodyParse.urlencoded({ extented: true }));
 app.use(bodyParse.json());
+
+const corsOptions = {
+  origin: "http://localhost:8080",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use("/api/user", require("./routes/user"));
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>회원가입</h1>
+    <h1>달력</h1>
     <form @submit.prevent="register">
       <div>
         <label for="email">이메일</label>
@@ -39,7 +39,7 @@
 import axios from "axios";
 
 export default {
-  name: "Login",
+  name: "CalenarList",
   components: {},
   data() {
     return {
@@ -131,7 +131,7 @@ export default {
           }
 
           alert("성공적으로 회원가입되었습니다!!");
-          this.$router.push("/user/login");
+          this.$router.push({ path: "/user/login" });
         }
       );
     },

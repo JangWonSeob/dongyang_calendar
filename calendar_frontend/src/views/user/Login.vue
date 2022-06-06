@@ -1,11 +1,29 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link>
-    <!-- <router-link to="/user/login">로그인</router-link> |
-    <router-link to="/user/register">회원가입</router-link> |
-    <router-link to="/user/logout">로그아웃</router-link> -->
-  </nav>
-  <router-view />
+  <div>
+    <h1>로그인</h1>
+    <form @submit.prevent="login">
+      <div>
+        <label for="email">이메일</label>
+        <input v-model="param.email" type="text" id="email" required />
+      </div>
+      <br />
+      <div>
+        <label for="password">비밀번호</label>
+        <input
+          v-model="param.password"
+          type="password"
+          id="password"
+          required
+        />
+      </div>
+      <br />
+      <button type="submit">로그인</button>
+    </form>
+    <br />
+    <div>
+      <router-link to="/">회원가입</router-link>
+    </div>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -17,10 +35,8 @@ export default {
     return {
       param: {
         email: "",
-        name: "",
         password: "",
       },
-      checkPassword: "",
     };
   },
   setup() {},
@@ -85,50 +101,23 @@ export default {
           console.log(err);
         });
     },
-    register() {
-      console.log(this.param);
-
-      if (this.param.password !== this.checkPassword) {
-        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-        return false;
-      }
-
-      this.API_CALL_POST(
-        "/user/register",
-        this.param,
-        (result, message, data) => {
-          if (!result) {
-            alert(message);
-            return false;
-          }
-
-          alert("성공적으로 회원가입되었습니다!!");
-          this.$router.push("/user/login");
+    login() {
+      this.API_CALL_POST("/user/login", this.param, (result, message, data) => {
+        console.log(result);
+        console.log(message);
+        console.log(data);
+        if (!result) {
+          alert(message);
+          return false;
         }
-      );
+
+        console.log(data.accessToken);
+        // 세션 스토리지에 저장
+        sessionStorage.setItem("accessToken", data.accessToken || "");
+        this.$router.push({ path: "/calendar/list" });
+      });
     },
   },
 };
 </script>
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-/* nav a.router-link-exact-active {
-  color: #42b983;
-} */
-</style>
+<style scoped></style>

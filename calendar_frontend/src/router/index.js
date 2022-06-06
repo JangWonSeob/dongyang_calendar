@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/Home.vue";
+import axios from "axios";
 // import ContactView from "../views/ContactView.vue";
 
 const routes = [
@@ -7,42 +8,116 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: { authRequired: "any" },
   },
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  },
-  {
-    path: "/contact",
-    name: "contact",
-    component: () =>
-      import(
-        /* webpackChunkName: "contact", webpackPrefetch:true */ "../views/ContactView.vue"
-      ),
-    // component: ContactView,
-  },
+  // {
+  //   path: "/contact",
+  //   name: "contact",
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "contact", webpackPrefetch:true */ "../views/ContactView.vue"
+  //     ),
+  //   // component: ContactView,
+  // },
   {
     path: "/user/login",
     name: "Login",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Login.vue"),
+      import(/* webpackChunkName: "about" */ "../views/user/Login.vue"),
+    meta: { authRequired: "notLoginUser" },
   },
   {
     path: "/user/register",
     name: "Register",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Register.vue"),
+      import(/* webpackChunkName: "about" */ "../views/user/Register.vue"),
+    meta: { authRequired: "notLoginUser" },
+  },
+  {
+    path: "/user/logout",
+    name: "Logout",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/user/Logout.vue"),
+    meta: { authRequired: "loginUser" },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+const checkUser = (callback) => {
+  callback = callback || function () {};
+  axios
+    .create({
+      baseURL: "http://localhost:5000/api",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+      },
+    })
+    .get("/user/auth")
+    .then((response) => {
+      console.log(response);
+      const data = response.data || {};
+      const header = data.header || {};
+      const result = header.result || false;
+      const message = header.message || "";
+      const body = data.body || {};
+
+      callback(result, message, body);
+    })
+    .catch((err) => {
+      console.log(err);
+      callback(false, err.message, {});
+    });
+};
+
+router.beforeEach((to, from, next) => {
+  if (
+    to.matched.some(function (routeInfo) {
+      return routeInfo.meta.authRequired === "any";
+    })
+  ) {
+    next();
+  } else if (
+    to.matched.some(function (routeInfo) {
+      console.log(routeInfo.meta.authRequired);
+      return routeInfo.meta.authRequired === "loginUser";
+    })
+  ) {
+    checkUser((result, message, data) => {
+      console.log(result);
+      console.log(message);
+      console.log(data);
+
+      if (!result) {
+        alert(message);
+        next({ path: "/" });
+        return false;
+      }
+
+      next();
+    });
+  } else if (
+    to.matched.some(function (routeInfo) {
+      console.log(routeInfo.meta.authRequired);
+      return routeInfo.meta.authRequired === "notLoginUser";
+    })
+  ) {
+    checkUser((result, message, data) => {
+      console.log(result);
+      console.log(message);
+      console.log(data);
+
+      if (result) {
+        next({ path: "/calendar/list" });
+        return false;
+      }
+
+      // next();
+    });
+  }
 });
 
 export default router;
