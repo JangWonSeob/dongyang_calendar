@@ -1,2 +1,3 @@
 /calendar_front/node_modules/
 /calendar_backend/node_modules/
+/calendar_backend/config/mongoDb.js

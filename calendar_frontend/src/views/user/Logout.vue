@@ -7,7 +7,7 @@ export default {
   components: {},
   data() {},
   setup() {},
-  create() {},
+  created() {},
   mounted() {
     this.logout();
   },

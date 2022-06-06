@@ -40,6 +40,15 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/user/Logout.vue"),
     meta: { authRequired: "loginUser" },
   },
+  {
+    path: "/calendar/list",
+    name: "CalenarList",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/calendar/CalenarList.vue"
+      ),
+    meta: { authRequired: "loginUser" },
+  },
 ];
 
 const router = createRouter({

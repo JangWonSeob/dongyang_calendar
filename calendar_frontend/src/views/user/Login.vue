@@ -40,7 +40,7 @@ export default {
     };
   },
   setup() {},
-  create() {},
+  created() {},
   mounted() {},
   unmounted() {},
   methods: {
