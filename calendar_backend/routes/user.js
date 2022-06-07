@@ -41,7 +41,7 @@ router.get("/auth", (req, res) => {
         return jsonFail(res, "로그인 후 이용 가능합니다.");
       }
       console.log("info: ", info);
-      return jsonSuccessInfo(res, { id: info.id || "", role: info.role || "" });
+      return jsonSuccessInfo(res, {id: info.id, name: info.name, role: info.role});
     }
   );
 });

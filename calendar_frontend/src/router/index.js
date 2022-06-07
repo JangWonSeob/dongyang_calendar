@@ -27,6 +27,13 @@ const routes = [
     meta: { authRequired: "notLoginUser" },
   },
   {
+    path: "/basic",
+    name: "Basic",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Basic.vue"),
+    meta: { authRequired: "any" },
+  },
+  {
     path: "/user/register",
     name: "Register",
     component: () =>
@@ -46,6 +53,24 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/calendar/CalenarList.vue"
+      ),
+    meta: { authRequired: "loginUser" },
+  },
+  {
+    path: "/calendar/detail/:year/:month/:day",
+    name: "CalenarDetail",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/calendar/CalenarDetail.vue"
+      ),
+    meta: { authRequired: "loginUser" },
+  },
+  {
+    path: "/calendar/add/:year/:month/:day",
+    name: "CalenarAdd",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/calendar/CalenarAdd.vue"
       ),
     meta: { authRequired: "loginUser" },
   },
@@ -124,7 +149,7 @@ router.beforeEach((to, from, next) => {
         return false;
       }
 
-      // next();
+      next();
     });
   }
 });

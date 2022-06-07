@@ -1,112 +1,16 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link>
-    <!-- <router-link to="/user/login">로그인</router-link> |
-    <router-link to="/user/register">회원가입</router-link> |
-    <router-link to="/user/logout">로그아웃</router-link> -->
-  </nav>
-  <router-view />
+  <div>
+    <NavVue></NavVue>
+    <router-view />
+  </div>
 </template>
 <script>
-import axios from "axios";
+import NavVue from "./components/Nav.vue";
 
 export default {
   name: "Login",
-  components: {},
-  data() {
-    return {
-      param: {
-        email: "",
-        name: "",
-        password: "",
-      },
-      checkPassword: "",
-    };
-  },
-  setup() {},
-  create() {},
-  mounted() {},
-  unmounted() {},
-  methods: {
-    API_CALL_GET(url, callback) {
-      callback = callback || function () {};
-
-      const apiUrl = "http://localhost:5000/api" + url;
-
-      axios
-        .get(apiUrl)
-        .then((response) => {
-          console.log(response);
-          response = response || {};
-          response.data = response.data || {};
-          response.data.body = response.data.body || {};
-
-          response.data.header = response.data.header || {};
-          response.data.header.message = response.data.header.message || "";
-          response.data.header.result = response.data.header.result || false;
-          if (response.data.header.result !== true) {
-            response.data.header.result = false;
-          }
-          callback(
-            response.data.header.result,
-            response.data.header.message,
-            response.data.body
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    API_CALL_POST(url, param, callback) {
-      callback = callback || function () {};
-
-      const apiUrl = "http://localhost:5000/api" + url;
-      axios
-        .post(apiUrl, param)
-        .then((response) => {
-          console.log(response);
-          response = response || {};
-          response.data = response.data || {};
-          response.data.body = response.data.body || {};
-
-          response.data.header = response.data.header || {};
-          response.data.header.message = response.data.header.message || "";
-          response.data.header.result = response.data.header.result || false;
-          if (response.data.header.result !== true) {
-            response.data.header.result = false;
-          }
-          callback(
-            response.data.header.result,
-            response.data.header.message,
-            response.data.body
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    register() {
-      console.log(this.param);
-
-      if (this.param.password !== this.checkPassword) {
-        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-        return false;
-      }
-
-      this.API_CALL_POST(
-        "/user/register",
-        this.param,
-        (result, message, data) => {
-          if (!result) {
-            alert(message);
-            return false;
-          }
-
-          alert("성공적으로 회원가입되었습니다!!");
-          this.$router.push("/user/login");
-        }
-      );
-    },
+  components: {
+    NavVue
   },
 };
 </script>

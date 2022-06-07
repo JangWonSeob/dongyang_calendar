@@ -1,6 +1,11 @@
 <template>
   <div>
     <h1>달력</h1>
+    <button type="button" @click="beforeMonth">이전달</button>
+    <button type="button" @click="nextMonth">다음달</button>
+    <div>
+      <p>{{searchParam.searchYear}}년 {{searchParam.searchMonth}}월</p>
+    </div>
     <table class="calendar">
       <thead>
         <tr>
@@ -14,13 +19,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
+        <tr v-for="(dayList, i) in calendarDayList">
+          <td v-for="(day,idx) in dayList" :class="{'today' : (now.month === day[0] && now.day === day[1])}">
             <div class="inner">
-              <span class="date dimmed">30</span>
+              <span class="date dimmed" v-if="i === 0 && idx < beforeMonthCount">{{day[1]}}</span>
+              <span class="date dimmed" v-else-if="i === (dayListSize - 1) &&  (7 - nextMonthCount) - 1 < idx">{{day[1]}}</span>
+              <span class="date" v-else>
+                <router-link :to="'/calendar/detail/'+ searchParam.searchYear + '/' + searchParam.searchMonth + '/' + day[1]">
+                  {{day[1]}}
+                </router-link>
+              </span>
             </div>
           </td>
-          <td>
+          <!-- <td>
             <div class="inner">
               <span class="date">1</span>
               <em class="text anniversary">국군의 날</em>
@@ -51,9 +62,9 @@
             <div class="inner">
               <span class="date">6</span>
             </div>
-          </td>
+          </td> -->
         </tr>
-        <tr>
+        <!-- <tr>
           <td>
             <div class="inner">
               <span class="date holiday">7</span>
@@ -203,32 +214,80 @@
               <span class="date">3</span>
             </div>
           </td>
-        </tr>
+        </tr> -->
       </tbody>
     </table>
   </div>
 </template>
 <script>
-import axios from "axios";
+import API_MIXIN from '../../js/api.js'
 
 export default {
   name: "CalenarList",
+  mixins: [API_MIXIN],
   components: {},
   data() {
     return {
       searchParam: {
         searchYear: 0,
         searchMonth: 0,
+        searchDay: 0,
       },
+      now: {
+        month: 0,
+        day: 0,
+      },
+      beforeMonthCount: 0,
+      currentMonthCount: 0,
+      nextMonthCount: 0,
+      dayListSize: 0,
       dayList: [],
     };
   },
+  computed: {
+        calendarDayList () {
+            let dayArr = [];
+            let arr = [];
+            let length = 0;
+
+            console.log(this.searchParam.searchYear + '/' + this.searchParam.searchMonth);
+
+            const beforeMonth = new Date(this.searchParam.searchYear, this.searchParam.searchMonth - 1, 0);
+            const currentStartDay = new Date(this.searchParam.searchYear, this.searchParam.searchMonth - 1, 1);
+            const currentLastDay = new Date(this.searchParam.searchYear, this.searchParam.searchMonth, 0);
+
+            this.beforeMonthCount = currentStartDay.getDay()
+            for (let i = currentStartDay.getDay() - 1; 0 <= i; i--) {
+                arr.push([this.searchParam.searchMonth - 1 ,beforeMonth.getDate() - i]);
+            }
+            this.currentMonthCount = currentLastDay.getDate();
+            for (let i = 0; i < currentLastDay.getDate(); i++) {
+                arr.push([this.searchParam.searchMonth, i + 1]);
+            }
+            this.nextMonthCount = 7 - (arr.length % 7);
+            while (arr.length % 7 > 0) {
+                this.nextMonthCount = (7 - (arr.length % 7));
+                for (let i = 0; i < this.nextMonthCount; i++) {
+                    arr.push([this.searchParam.searchMonth + 1, i + 1]);
+                }
+            }
+            
+            length = arr.length;
+
+            for (let i = 0; i < length / 7; i++) {
+                const arrSplice = arr.splice(0, 7);
+                dayArr.push(arrSplice);
+            }
+
+            this.dayListSize = dayArr.length;
+            return dayArr;
+        },
+    },
   setup() {},
   created() {
     this.initCalenar();
   },
   mounted() {
-    this.getDayList();
   },
   unmounted() {},
   methods: {
@@ -237,108 +296,46 @@ export default {
 
       this.searchParam.searchYear = now.getFullYear();
       this.searchParam.searchMonth = now.getMonth() + 1;
+      this.now.month = now.getMonth() + 1;
+      this.now.day = now.getDate();
 
       console.log("year:", this.searchParam.searchYear);
       console.log("month:", this.searchParam.searchMonth);
+      console.log("day:", this.searchParam.searchDay);
     },
-    getDayList() {
-      let arr = [];
-      const beforeMonth = new Date(
-        this.searchParam.searchYear,
-        this.searchParam.searchMonth,
-        0
-      );
-      const currentMonthFirstDay = new Date(
-        this.searchParam.searchYear,
-        this.searchParam.searchMonth,
-        0
-      );
+    beforeMonth () {
 
-      console.log("beforeMonth:", beforeMonth);
+            let year = Number(this.searchParam.searchYear);
+            let month = Number(this.searchParam.searchMonth);
 
-      console.log("currentMonthFirstDay: ", currentMonthFirstDay);
+            if (1 < month && month < 13) {
+                // 2 ~ 12
+                month -= 1;
+            } else if (month === 1) {
+                year -= 1;
+                month = 12;
+            }
 
-      // return arr;
-    },
-    API_CALL_GET(url, callback) {
-      callback = callback || function () {};
+            this.searchParam.searchYear = year;
+            this.searchParam.searchMonth = month;
 
-      const apiUrl = "http://localhost:5000/api" + url;
+        },
+        nextMonth () {
 
-      axios
-        .get(apiUrl)
-        .then((response) => {
-          console.log(response);
-          response = response || {};
-          response.data = response.data || {};
-          response.data.body = response.data.body || {};
+            let year = Number(this.searchParam.searchYear);
+            let month = Number(this.searchParam.searchMonth);
 
-          response.data.header = response.data.header || {};
-          response.data.header.message = response.data.header.message || "";
-          response.data.header.result = response.data.header.result || false;
-          if (response.data.header.result !== true) {
-            response.data.header.result = false;
-          }
-          callback(
-            response.data.header.result,
-            response.data.header.message,
-            response.data.body
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    API_CALL_POST(url, param, callback) {
-      callback = callback || function () {};
+            if (0 < month && month < 12) {
+                // 1 ~ 11
+                month += 1;
+            } else if (month === 12) {
+                year += 1;
+                month = 1;
+            }
 
-      const apiUrl = "http://localhost:5000/api" + url;
-      axios
-        .post(apiUrl, param)
-        .then((response) => {
-          console.log(response);
-          response = response || {};
-          response.data = response.data || {};
-          response.data.body = response.data.body || {};
-
-          response.data.header = response.data.header || {};
-          response.data.header.message = response.data.header.message || "";
-          response.data.header.result = response.data.header.result || false;
-          if (response.data.header.result !== true) {
-            response.data.header.result = false;
-          }
-          callback(
-            response.data.header.result,
-            response.data.header.message,
-            response.data.body
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    register() {
-      console.log(this.param);
-
-      if (this.param.password !== this.checkPassword) {
-        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-        return false;
-      }
-
-      this.API_CALL_POST(
-        "/user/register",
-        this.param,
-        (result, message, data) => {
-          if (!result) {
-            alert(message);
-            return false;
-          }
-
-          alert("성공적으로 회원가입되었습니다!!");
-          this.$router.push({ path: "/user/login" });
+            this.searchParam.searchYear = year;
+            this.searchParam.searchMonth = month;
         }
-      );
-    },
   },
 };
 </script>
