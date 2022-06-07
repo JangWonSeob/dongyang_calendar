@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import API_MIXIN from '../../js/api.js'
+import API_MIXIN from "../../js/api.js";
 
 export default {
   name: "Login",

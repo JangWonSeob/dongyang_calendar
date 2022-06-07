@@ -10,7 +10,7 @@ import NavVue from "./components/Nav.vue";
 export default {
   name: "Login",
   components: {
-    NavVue
+    NavVue,
   },
 };
 </script>

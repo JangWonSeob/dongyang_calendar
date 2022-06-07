@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   created() {},
   mounted() {
-    console.log('AUTH_MININ');
+    console.log("AUTH_MININ");
   },
-  methods : {
+  methods: {
     API_CALL_GET(url, callback) {
       callback = callback || function () {};
 
@@ -63,5 +63,5 @@ export default {
           console.log(err);
         });
     },
-  }
-}
+  },
+};

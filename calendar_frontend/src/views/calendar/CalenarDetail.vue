@@ -4,15 +4,15 @@
     <button type="button" @click="beforeMonth">이전달</button>
     <button type="button" @click="nextMonth">다음달</button>
     <div>
-      <p>{{searchParam.searchYear}}년 {{searchParam.searchMonth}}월</p>
+      <p>{{ searchParam.searchYear }}년 {{ searchParam.searchMonth }}월</p>
     </div>
     <div>
-     <button @click="goAddPage">일정 추가</button>
+      <button @click="goAddPage">일정 추가</button>
     </div>
   </div>
 </template>
 <script>
-import API_MIXIN from '../../js/api.js'
+import API_MIXIN from "../../js/api.js";
 
 export default {
   mixins: [API_MIXIN],
@@ -38,15 +38,14 @@ export default {
   },
   setup() {},
   created() {
-    const urlArr = location.href.split('/');
+    const urlArr = location.href.split("/");
     this.searchParam.searchYear = urlArr[5];
     this.searchParam.searchMonth = urlArr[6];
     this.searchParam.searchDay = urlArr[7];
 
     console.log(this.searchParam);
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     initCalenar() {
       const now = new Date();
@@ -56,42 +55,47 @@ export default {
       this.now.month = now.getMonth() + 1;
       this.now.day = now.getDate();
     },
-    beforeMonth () {
-            let year = Number(this.searchParam.searchYear);
-            let month = Number(this.searchParam.searchMonth);
+    beforeMonth() {
+      let year = Number(this.searchParam.searchYear);
+      let month = Number(this.searchParam.searchMonth);
 
-            if (1 < month && month < 13) {
-                // 2 ~ 12
-                month -= 1;
-            } else if (month === 1) {
-                year -= 1;
-                month = 12;
-            }
+      if (1 < month && month < 13) {
+        // 2 ~ 12
+        month -= 1;
+      } else if (month === 1) {
+        year -= 1;
+        month = 12;
+      }
 
-            this.searchParam.searchYear = year;
-            this.searchParam.searchMonth = month;
+      this.searchParam.searchYear = year;
+      this.searchParam.searchMonth = month;
+    },
+    nextMonth() {
+      let year = Number(this.searchParam.searchYear);
+      let month = Number(this.searchParam.searchMonth);
 
-        },
-            nextMonth(){
+      if (0 < month && month < 12) {
+        // 1 ~ 11
+        month += 1;
+      } else if (month === 12) {
+        year += 1;
+        month = 1;
+      }
 
-            let year = Number(this.searchParam.searchYear);
-            let month = Number(this.searchParam.searchMonth);
-
-            if (0 < month && month < 12) {
-                // 1 ~ 11
-                month += 1;
-            } else if (month === 12) {
-                year += 1;
-                month = 1;
-            }
-
-            this.searchParam.searchYear = year;
-            this.searchParam.searchMonth = month;
-
-        },
-        goAddPage() {
-          this.$router.push({path: '/calendar/add/' + this.searchParam.searchYear + '/' + this.searchParam.searchMonth + '/' + this.searchParam.searchDay})
-        }
+      this.searchParam.searchYear = year;
+      this.searchParam.searchMonth = month;
+    },
+    goAddPage() {
+      this.$router.push({
+        path:
+          "/calendar/add/" +
+          this.searchParam.searchYear +
+          "/" +
+          this.searchParam.searchMonth +
+          "/" +
+          this.searchParam.searchDay,
+      });
+    },
   },
 };
 </script>
