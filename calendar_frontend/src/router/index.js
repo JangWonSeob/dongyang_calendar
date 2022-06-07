@@ -74,6 +74,15 @@ const routes = [
       ),
     meta: { authRequired: "loginUser" },
   },
+  {
+    path: "/calendar/full",
+    name: "FullCalendar",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/calendar/FullCalendar.vue"
+      ),
+    meta: { authRequired: "any" },
+  },
 ];
 
 const router = createRouter({
