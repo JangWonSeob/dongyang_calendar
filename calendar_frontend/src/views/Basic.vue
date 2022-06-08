@@ -1,6 +1,6 @@
 <template></template>
 <script>
-import API_MIXIN from '../js/api.js'
+import API_MIXIN from "../js/api.js";
 
 export default {
   name: "",
@@ -12,8 +12,7 @@ export default {
     };
   },
   setup() {},
-  created() {
-  },
+  created() {},
   mounted() {},
   unmounted() {},
   methods: {},

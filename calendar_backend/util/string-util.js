@@ -1,12 +1,11 @@
 const isEmpty = (text) => {
+  if (text === null || text === undefined) {
+    return true;
+  }
 
-    if (text === null || text === undefined) {
-        return true;
-    }
+  const trimText = text.replace(/\s*/g, "");
 
-    const trimText = text.replace(/\s*/g, '');
-
-    return trimText === '';
-  };
+  return trimText === "";
+};
 
 module.exports = { isEmpty };

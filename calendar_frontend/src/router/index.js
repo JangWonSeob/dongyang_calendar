@@ -117,16 +117,16 @@ const checkUser = (callback) => {
 };
 
 const setUserName = (userName) => {
-  if (sessionStorage.getItem("userName") != null && 
-  sessionStorage.getItem("userName") !== '' && 
-  sessionStorage.getItem("userName") !== undefined) {
+  if (
+    sessionStorage.getItem("userName") != null &&
+    sessionStorage.getItem("userName") !== "" &&
+    sessionStorage.getItem("userName") !== undefined
+  ) {
     sessionStorage.setItem("userName", userName);
   }
-}
-
+};
 
 router.beforeEach((to, from, next) => {
-
   if (
     // 모든 유저 접근 가능
     to.matched.some(function (routeInfo) {
@@ -149,7 +149,7 @@ router.beforeEach((to, from, next) => {
         return false;
       }
 
-      setUserName(data.name || '');
+      setUserName(data.name || "");
       next();
     });
   } else if (
@@ -165,7 +165,7 @@ router.beforeEach((to, from, next) => {
       console.log(data);
 
       if (result) {
-        setUserName(data.name || '');
+        setUserName(data.name || "");
         next({ path: "/calendar/list" });
         return false;
       }

@@ -41,7 +41,11 @@ router.get("/auth", (req, res) => {
         return jsonFail(res, "로그인 후 이용 가능합니다.");
       }
       console.log("info: ", info);
-      return jsonSuccessInfo(res, {id: info.id, name: info.name, role: info.role});
+      return jsonSuccessInfo(res, {
+        id: info.id,
+        name: info.name,
+        role: info.role,
+      });
     }
   );
 });
@@ -87,7 +91,10 @@ router.post("/login", (req, res) => {
     bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
       if (err) return jsonFail(res, err);
       if (isMatch) {
-        return jsonSuccessInfo(res, { accessToken: getToken(user), userName: user.name });
+        return jsonSuccessInfo(res, {
+          accessToken: getToken(user),
+          userName: user.name,
+        });
       } else {
         return jsonFail(res, "비밀번호가 일치하지 않습니다.");
       }

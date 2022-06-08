@@ -6,18 +6,21 @@
     </div> -->
     <form @submit.prevent="save">
       <div>
-        <label for="title">제목</label><input v-model="param.title" id="title" type="text" />
+        <label for="title">제목</label
+        ><input v-model="param.title" id="title" type="text" />
       </div>
-      <br/>
+      <br />
       <div>
         <div>일정</div>
-        <input v-model="param.startDate" id="startDate" type="datetime-local" /> ~ <input v-model="param.endDate" id="endDate" type="datetime-local" />
+        <input v-model="param.startDate" id="startDate" type="datetime-local" />
+        ~ <input v-model="param.endDate" id="endDate" type="datetime-local" />
       </div>
-      <br/>
+      <br />
       <div>
-        <label for="description">내용</label><textarea v-model="param.description" id="description"></textarea>
+        <label for="description">내용</label
+        ><textarea v-model="param.description" id="description"></textarea>
       </div>
-      <br/>
+      <br />
       <button type="submit">저장</button>
     </form>
   </div>
@@ -32,10 +35,10 @@ export default {
   data() {
     return {
       param: {
-        title: '',
-        description: '',
-        startDate: '',
-        endDate: '',
+        title: "",
+        description: "",
+        startDate: "",
+        endDate: "",
       },
       searchParam: {
         searchYear: 0,
@@ -45,18 +48,19 @@ export default {
     };
   },
   setup() {},
-  created() {
-  },
-  mounted() {
-  },
+  created() {},
+  mounted() {},
   methods: {
     save() {
       console.log(this.param);
-      this.API_CALL_POST('/calendar/save', this.param, (result, message, data) => {
-        console
-      })
- 
-    }
+      this.API_CALL_POST(
+        "/calendar/save",
+        this.param,
+        (result, message, data) => {
+          console;
+        }
+      );
+    },
   },
 };
 </script>

@@ -83,9 +83,12 @@ export default {
       // this.$router.push({path:'/calendar/add'});
       console.log("handleDateSelect");
       console.log(selectInfo.startStr);
-      const dateArr = selectInfo.startStr.split('-');
+      const dateArr = selectInfo.startStr.split("-");
       console.log(dateArr);
-      this.$router.push({path:'/calendar/add/' + dateArr[0] + '/' + dateArr[1] + '/' + dateArr[2]});
+      this.$router.push({
+        path:
+          "/calendar/add/" + dateArr[0] + "/" + dateArr[1] + "/" + dateArr[2],
+      });
       // let title = prompt("Please enter a new title for your event");
       // let calendarApi = selectInfo.view.calendar;
       // calendarApi.unselect(); // clear date selection
