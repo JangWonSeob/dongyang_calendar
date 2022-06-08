@@ -9,10 +9,14 @@ export default {
     API_CALL_GET(url, callback) {
       callback = callback || function () {};
 
-      const apiUrl = "http://localhost:5000/api" + url;
-
       axios
-        .get(apiUrl)
+        .create({
+          baseURL: "http://localhost:5000/api",
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+          },
+        })
+        .get(url)
         .then((response) => {
           console.log(response);
           response = response || {};
@@ -38,9 +42,14 @@ export default {
     API_CALL_POST(url, param, callback) {
       callback = callback || function () {};
 
-      const apiUrl = "http://localhost:5000/api" + url;
       axios
-        .post(apiUrl, param)
+        .create({
+          baseURL: "http://localhost:5000/api",
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+          },
+        })
+        .post(url, param)
         .then((response) => {
           console.log(response);
           response = response || {};

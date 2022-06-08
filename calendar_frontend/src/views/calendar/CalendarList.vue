@@ -13,7 +13,7 @@
     <FullCalendar :options="calendarOptions" @click="handleSelect" />
     <button type="button" @click="popup">클릭</button>
     <div>
-      <div class="modal">
+      <!-- <div class="modal">
         <button onclick="CloseModal();">
           <img src="icon_X_2XL.svg" alt="" />
         </button>
@@ -21,7 +21,7 @@
         <h2>2021년 신축년 (辛丑年)</h2>
         <h2>새해 복 많이 받으세요!</h2>
         <figure><img src="ricecake.jpg" alt="" /></figure>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -37,7 +37,7 @@ import { INITIAL_EVENTS, createEventId } from "../../js/evnet-util.js";
 
 export default {
   components: {
-    FullCalendar, // make the <FullCalendar> tag available
+    FullCalendar,
   },
   mounted() {
     console.log(new Date(2022, 10, 2).toISOString());
@@ -80,19 +80,24 @@ export default {
     },
     handleDateSelect(selectInfo) {
       // 추가
+      // this.$router.push({path:'/calendar/add'});
       console.log("handleDateSelect");
-      let title = prompt("Please enter a new title for your event");
-      let calendarApi = selectInfo.view.calendar;
-      calendarApi.unselect(); // clear date selection
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-        });
-      }
+      console.log(selectInfo.startStr);
+      const dateArr = selectInfo.startStr.split('-');
+      console.log(dateArr);
+      this.$router.push({path:'/calendar/add/' + dateArr[0] + '/' + dateArr[1] + '/' + dateArr[2]});
+      // let title = prompt("Please enter a new title for your event");
+      // let calendarApi = selectInfo.view.calendar;
+      // calendarApi.unselect(); // clear date selection
+      // if (title) {
+      //   calendarApi.addEvent({
+      //     id: createEventId(),
+      //     title,
+      //     start: selectInfo.startStr,
+      //     end: selectInfo.endStr,
+      //     allDay: selectInfo.allDay,
+      //   });
+      // }
     },
     handleEventClick(clickInfo) {
       // 삭제기능

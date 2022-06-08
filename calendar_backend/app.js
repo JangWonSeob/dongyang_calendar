@@ -34,6 +34,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/api/user", require("./routes/user"));
+app.use("/api/calendar", require("./routes/calendar"));
 
 app.get("/", (req, res) => {
   res.send("Hello World Home");

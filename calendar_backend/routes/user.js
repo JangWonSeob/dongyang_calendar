@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { User } = require("../modules/user");
-const { getToken, verify } = require("../util/jwtUtil");
+const { getToken, verify } = require("../util/jwt-util");
 const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
 
 // const { auth } = require("../middleware/auth");
@@ -86,9 +86,8 @@ router.post("/login", (req, res) => {
 
     bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
       if (err) return jsonFail(res, err);
-
       if (isMatch) {
-        return jsonSuccessInfo(res, { accessToken: getToken(user) });
+        return jsonSuccessInfo(res, { accessToken: getToken(user), userName: user.name });
       } else {
         return jsonFail(res, "비밀번호가 일치하지 않습니다.");
       }

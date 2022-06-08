@@ -48,11 +48,11 @@ const routes = [
     meta: { authRequired: "loginUser" },
   },
   {
-    path: "/calendar/list",
+    path: "/calendar/list2",
     name: "CalenarList",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/calendar/CalenarList.vue"
+        /* webpackChunkName: "about" */ "../views/calendar/_CalenarList.vue"
       ),
     meta: { authRequired: "loginUser" },
   },
@@ -61,7 +61,7 @@ const routes = [
     name: "CalenarDetail",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/calendar/CalenarDetail.vue"
+        /* webpackChunkName: "about" */ "../views/calendar/CalendarDetail.vue"
       ),
     meta: { authRequired: "loginUser" },
   },
@@ -70,16 +70,16 @@ const routes = [
     name: "CalenarAdd",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/calendar/CalenarAdd.vue"
+        /* webpackChunkName: "about" */ "../views/calendar/CalendarAdd.vue"
       ),
     meta: { authRequired: "loginUser" },
   },
   {
-    path: "/calendar/full",
-    name: "FullCalendar",
+    path: "/calendar/list",
+    name: "CalendarList",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/calendar/FullCalendar.vue"
+        /* webpackChunkName: "about" */ "../views/calendar/CalendarList.vue"
       ),
     meta: { authRequired: "any" },
   },
@@ -116,30 +116,40 @@ const checkUser = (callback) => {
     });
 };
 
+const setUserName = (userName) => {
+  if (sessionStorage.getItem("userName") != null && 
+  sessionStorage.getItem("userName") !== '' && 
+  sessionStorage.getItem("userName") !== undefined) {
+    sessionStorage.setItem("userName", userName);
+  }
+}
+
+
 router.beforeEach((to, from, next) => {
+
   if (
+    // 모든 유저 접근 가능
     to.matched.some(function (routeInfo) {
       return routeInfo.meta.authRequired === "any";
     })
   ) {
     next();
   } else if (
+    // 로그인 한 유저 접근 가능
     to.matched.some(function (routeInfo) {
       console.log(routeInfo.meta.authRequired);
       return routeInfo.meta.authRequired === "loginUser";
     })
   ) {
     checkUser((result, message, data) => {
-      console.log(result);
-      console.log(message);
-      console.log(data);
-
       if (!result) {
         alert(message);
         next({ path: "/" });
+        sessionStorage.removeItem("userName");
         return false;
       }
 
+      setUserName(data.name || '');
       next();
     });
   } else if (
@@ -148,12 +158,14 @@ router.beforeEach((to, from, next) => {
       return routeInfo.meta.authRequired === "notLoginUser";
     })
   ) {
+    // 로그인 한 유저 접근 불가
     checkUser((result, message, data) => {
       console.log(result);
       console.log(message);
       console.log(data);
 
       if (result) {
+        setUserName(data.name || '');
         next({ path: "/calendar/list" });
         return false;
       }

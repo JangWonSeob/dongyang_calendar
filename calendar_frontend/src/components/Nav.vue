@@ -34,80 +34,24 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.auth(to.path, from.path);
-      console.log(this.info);
+      this.getUserName();
     },
   },
   mounted() {},
   unmounted() {},
   methods: {
-    auth(path, beforePath) {
-      const any = ["/", "/calendar/full"];
-      const notLogin = ["/user/login", "/user/register"];
-
-      if (!(any.indexOf(path) < 0)) {
-        // 모든 권한
-      } else if (!(notLogin.indexOf(path) < 0)) {
-        // 로그인 하지 않은 유저만 가능 한 곳
-        this.authCall((result, message, data) => {
-          this.info.loginYn = result;
-
-          if (result) {
-            alert("접근권한이 없습니다.");
-            this.$router.push({ path: beforePath });
-            return false;
-          }
-
-          this.$router.push({ path: path });
-        });
-      } else {
-        // 로그인 유저만 가능 한 곳
-        this.authCall((result, message, data) => {
-          this.info.loginYn = result;
-
-          if (!result) {
-            alert(message);
-            this.$router.push({ path: beforePath });
-            return false;
-          }
-          console.log(data);
-          this.info.userName = data.name || "";
-          this.$router.push({ path: path });
-        });
-      }
-    },
-    authCall(callback) {
-      callback = callback || function () {};
-      axios
-        .create({
-          baseURL: "http://localhost:5000/api",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-          },
-        })
-        .get("/user/auth")
-        .then((response) => {
-          console.log(response);
-          const data = response.data || {};
-          const header = data.header || {};
-          const result = header.result || false;
-          const message = header.message || "";
-          const body = data.body || {};
-
-          callback(result, message, body);
-        })
-        .catch((err) => {
-          console.log(err);
-          callback(false, err.message, {});
-        });
-    },
-    logout() {
-      console.log("logout");
-      sessionStorage.removeItem("accessToken");
+    getUserName() {
       this.info.loginYn = false;
-      this.info.userName = "";
-      this.$router.push({ path: "/" });
-    },
+      this.info.userName = '';
+      if (sessionStorage.getItem("userName") !== null && 
+      sessionStorage.getItem("userName") !== '' &&
+      sessionStorage.getItem("userName") !== undefined
+      ) {
+        this.info.loginYn = true;
+        this.info.userName = sessionStorage.getItem("userName");
+      }
+      console.log(sessionStorage.getItem("userName"));
+    }
   },
 };
 </script>

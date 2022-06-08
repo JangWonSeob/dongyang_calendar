@@ -56,6 +56,7 @@ export default {
         }
         // 세션 스토리지에 저장
         sessionStorage.setItem("accessToken", data.accessToken || "");
+        sessionStorage.setItem("userName", data.userName || "");
         this.$router.push({ path: "/calendar/list" });
       });
     },

@@ -8,11 +8,16 @@ const calendarSchema = mongoose.Schema(
     },
     title: {
       type: String,
-      maxlength: 50,
     },
-    description: String,
-    startDate: Date,
-    endDate: Date,
+    description: {
+      type: String,
+    },
+    startDate: {
+      type: Date,
+    },
+    endDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
