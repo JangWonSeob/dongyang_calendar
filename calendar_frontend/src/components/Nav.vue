@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "NavVue",
   components: {},
@@ -29,9 +27,7 @@ export default {
     };
   },
   setup() {},
-  created() {
-    // this.auth();
-  },
+  created() {},
   watch: {
     $route(to, from) {
       this.getUserName();
@@ -42,16 +38,22 @@ export default {
   methods: {
     getUserName() {
       this.info.loginYn = false;
-      this.info.userName = '';
-      if (sessionStorage.getItem("userName") !== null && 
-      sessionStorage.getItem("userName") !== '' &&
-      sessionStorage.getItem("userName") !== undefined
+      this.info.userName = "";
+      if (
+        sessionStorage.getItem("userName") !== null &&
+        sessionStorage.getItem("userName") !== "" &&
+        sessionStorage.getItem("userName") !== undefined
       ) {
         this.info.loginYn = true;
         this.info.userName = sessionStorage.getItem("userName");
       }
       console.log(sessionStorage.getItem("userName"));
-    }
+    },
+    logout() {
+      sessionStorage.removeItem("accessToken");
+      sessionStorage.removeItem("userName");
+      this.$router.push({ path: "/" });
+    },
   },
 };
 </script>

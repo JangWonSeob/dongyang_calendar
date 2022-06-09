@@ -55,6 +55,8 @@ router.post("/register", (req, res) => {
 
   if (req.body.password !== undefined && req.body.password !== "") {
     User.findOne({ email: req.body.email }, (err, user) => {
+      if (err) return jsonFail(res, err.message);
+
       if (user) return jsonFail(res, "이미 존재하는 이메일입니다.");
 
       bcrypt.genSalt(saltRounds, (err, salt) => {

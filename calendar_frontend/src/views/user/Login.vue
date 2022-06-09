@@ -21,7 +21,7 @@
     </form>
     <br />
     <div>
-      <router-link to="/">회원가입</router-link>
+      <router-link to="/user/register">회원가입</router-link>
     </div>
   </div>
 </template>
@@ -47,9 +47,6 @@ export default {
   methods: {
     login() {
       this.API_CALL_POST("/user/login", this.param, (result, message, data) => {
-        console.log(result);
-        console.log(message);
-        console.log(data);
         if (!result) {
           alert(message);
           return false;

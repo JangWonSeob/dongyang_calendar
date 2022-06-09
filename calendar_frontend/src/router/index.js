@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/Home.vue";
 import axios from "axios";
-// import ContactView from "../views/ContactView.vue";
 
 const routes = [
   {
@@ -10,15 +9,6 @@ const routes = [
     component: HomeView,
     meta: { authRequired: "any" },
   },
-  // {
-  //   path: "/contact",
-  //   name: "contact",
-  //   component: () =>
-  //     import(
-  //       /* webpackChunkName: "contact", webpackPrefetch:true */ "../views/ContactView.vue"
-  //     ),
-  //   // component: ContactView,
-  // },
   {
     path: "/user/login",
     name: "Login",
@@ -48,40 +38,13 @@ const routes = [
     meta: { authRequired: "loginUser" },
   },
   {
-    path: "/calendar/list2",
-    name: "CalenarList",
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */ "../views/calendar/_CalenarList.vue"
-      ),
-    meta: { authRequired: "loginUser" },
-  },
-  {
-    path: "/calendar/detail/:year/:month/:day",
-    name: "CalenarDetail",
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */ "../views/calendar/CalendarDetail.vue"
-      ),
-    meta: { authRequired: "loginUser" },
-  },
-  {
-    path: "/calendar/add/:year/:month/:day",
-    name: "CalenarAdd",
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */ "../views/calendar/CalendarAdd.vue"
-      ),
-    meta: { authRequired: "loginUser" },
-  },
-  {
     path: "/calendar/list",
     name: "CalendarList",
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/calendar/CalendarList.vue"
       ),
-    meta: { authRequired: "any" },
+    meta: { authRequired: "loginUser" },
   },
 ];
 

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const calendarSchema = mongoose.Schema(
   {
@@ -12,10 +13,10 @@ const calendarSchema = mongoose.Schema(
     description: {
       type: String,
     },
-    startDate: {
+    start: {
       type: Date,
     },
-    endDate: {
+    end: {
       type: Date,
     },
   },

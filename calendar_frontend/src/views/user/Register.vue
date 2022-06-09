@@ -30,7 +30,6 @@
           required
         />
       </div>
-      <button type="reset">초기화</button> |
       <button type="submit">회원가입</button>
     </form>
   </div>
