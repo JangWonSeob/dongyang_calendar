@@ -37,6 +37,7 @@ export default {
   unmounted() {},
   methods: {
     getUserName() {
+      // sessionStorage에서 유저정보 가져오기
       this.info.loginYn = false;
       this.info.userName = "";
       if (
@@ -50,6 +51,7 @@ export default {
       console.log(sessionStorage.getItem("userName"));
     },
     logout() {
+      // 로그아웃
       sessionStorage.removeItem("accessToken");
       sessionStorage.removeItem("userName");
       sessionStorage.removeItem("isUser");

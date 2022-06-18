@@ -45,7 +45,6 @@ import ListPlugin from "@fullcalendar/list";
 
 import Popup from "../../components/Popup.vue";
 import API_MIXIN from "../../js/api.js";
-import dayjs from "dayjs";
 
 export default {
   mixins: [API_MIXIN],
@@ -72,10 +71,6 @@ export default {
       changeMonth: false,
       list: [],
       popupYn: false,
-      searchParam: {
-        searchStartDate: "",
-        searchEndDate: "",
-      },
       activeStart: "",
       activeEnd: "",
       param: {
@@ -86,6 +81,7 @@ export default {
         calenarEvent: {},
       },
 
+      // fullCalendar 설정
       calendarOptions: {
         plugins: [DayGridPlugin, TimGridPlugin, InteractionPlugin, ListPlugin],
         initialView: "dayGridMonth",
@@ -118,13 +114,6 @@ export default {
       // 목록 가져오기
       this.list = [];
       let calendarApi = this.$refs.fullCalendar.getApi();
-
-      this.searchParam.searchStartDate = dayjs(calendarApi.view.activeStart)
-        .add(9, "h")
-        .toDate();
-      this.searchParam.searchEndDate = dayjs(calendarApi.view.activeEnd)
-        .add(9, "h")
-        .toDate();
 
       this.API_CALL_GET("/calendar/list", (result, message, data) => {
         data = data || [];

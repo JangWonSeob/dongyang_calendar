@@ -56,9 +56,9 @@ export default {
   mounted() {},
   unmounted() {},
   methods: {
+    // 회원가입 메서드
     register() {
-      console.log(this.param);
-
+      // 비밀번호 비교
       if (this.param.password !== this.checkPassword) {
         alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         return false;

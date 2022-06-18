@@ -97,15 +97,14 @@ export default {
         } else {
           this.activeText = "수정";
         }
-        console.log(this.calendarId);
-        console.log("open popUp");
+        // 타입 변환
         // 2022-06-10T14:40Z
         this.param.startDateStr = this.startDate + "T00:00";
         this.param.endDateStr = this.endDate + "T00:00";
       }
     },
     updateYn() {
-      console.log("change updateYn");
+      // 등록인지 수정인지 여부
       if (this.updateYn) {
         if (this.calendarId !== null && this.calendarId !== "") {
           this.param.id = this.calendarId;
@@ -164,6 +163,7 @@ export default {
   },
   unmounted() {},
   methods: {
+    // 일정 삭제 메서드
     deleteCalendar() {
       if (confirm("삭제하시겠습니까? ")) {
         this.API_CALL_GET(
@@ -179,6 +179,7 @@ export default {
         );
       }
     },
+    // 팝업 닫기 메서드
     popupClose() {
       this.param.title = "";
       this.param.description = "";
@@ -190,6 +191,7 @@ export default {
       this.$emit("popupYn", false);
       this.$emit("updateYn", false);
     },
+    // 저장 메서드
     save() {
       if (!confirm("저장하시겠습니까? ")) {
         return false;
@@ -212,7 +214,6 @@ export default {
         active = "update";
       }
 
-      console.log(this.param);
       this.API_CALL_POST(
         "/calendar/" + active,
         this.param,
@@ -226,6 +227,7 @@ export default {
         }
       );
     },
+    // 수정 메서드
     update() {
       if (this.param.startDateStr === "" || this.param.endDateStr == "") {
         alert("날짜를 입력해주세요");

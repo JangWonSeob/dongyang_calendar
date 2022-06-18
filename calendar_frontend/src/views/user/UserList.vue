@@ -51,6 +51,7 @@ export default {
   },
   unmounted() {},
   methods: {
+    // 회원 목록(팀원) 메서드
     getList() {
       this.API_CALL_GET("/user/list", (result, message, data) => {
         if (!result) {
@@ -61,7 +62,7 @@ export default {
         this.list = data;
       });
     },
-    updateUser() {},
+    // 회원 삭제(팀원) - 메서드
     deleteUser(id) {
       console.log(id);
 

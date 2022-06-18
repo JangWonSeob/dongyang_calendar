@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/Home.vue";
 import axios from "axios";
 
+// router 설정
 const routes = [
   {
     path: "/",
@@ -13,36 +14,22 @@ const routes = [
     path: "/user/login",
     name: "Login",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/user/Login.vue"),
+      import(/* webpackChunkName: "Login" */ "../views/user/Login.vue"),
     meta: { authRequired: "notLoginUser" },
-  },
-  {
-    path: "/basic",
-    name: "Basic",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Basic.vue"),
-    meta: { authRequired: "any" },
   },
   {
     path: "/user/register",
     name: "Register",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/user/Register.vue"),
+      import(/* webpackChunkName: "Register" */ "../views/user/Register.vue"),
     meta: { authRequired: "notLoginUser" },
-  },
-  {
-    path: "/user/logout",
-    name: "Logout",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/user/Logout.vue"),
-    meta: { authRequired: "loginUser" },
   },
   {
     path: "/calendar/list",
     name: "CalendarList",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/calendar/CalendarList.vue"
+        /* webpackChunkName: "CalendarList" */ "../views/calendar/CalendarList.vue"
       ),
     meta: { authRequired: "loginUser" },
   },
@@ -50,14 +37,14 @@ const routes = [
     path: "/user/list",
     name: "UserList",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/user/UserList.vue"),
+      import(/* webpackChunkName: "UserList" */ "../views/user/UserList.vue"),
     meta: { authRequired: "loginUser" },
   },
   {
     path: "/user/add",
     name: "UserAdd",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/user/UserAdd.vue"),
+      import(/* webpackChunkName: "UserAdd" */ "../views/user/UserAdd.vue"),
     meta: { authRequired: "loginUser" },
   },
 ];
@@ -67,6 +54,7 @@ const router = createRouter({
   routes,
 });
 
+// 서버에 요청하여 유저 정보 체크
 const checkUser = (callback) => {
   callback = callback || function () {};
   axios
@@ -93,6 +81,7 @@ const checkUser = (callback) => {
     });
 };
 
+// 유저정보 sessionStorage에 저장
 const setUserName = (userName) => {
   if (
     sessionStorage.getItem("userName") != null &&
@@ -103,6 +92,7 @@ const setUserName = (userName) => {
   }
 };
 
+// 라우터 접근전 권한 체크
 router.beforeEach((to, from, next) => {
   if (
     // 모든 유저 접근 가능

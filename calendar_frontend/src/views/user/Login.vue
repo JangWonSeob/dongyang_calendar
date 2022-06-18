@@ -45,13 +45,13 @@ export default {
   mounted() {},
   unmounted() {},
   methods: {
+    // 로그인 메서드
     login() {
       this.API_CALL_POST("/user/login", this.param, (result, message, data) => {
         if (!result) {
           alert(message);
           return false;
         }
-        console.log("data login", data);
         // 세션 스토리지에 저장
         sessionStorage.setItem("accessToken", data.accessToken || "");
         sessionStorage.setItem("userName", data.userName || "");

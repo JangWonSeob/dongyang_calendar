@@ -6,6 +6,7 @@ export default {
     console.log("API_MININ");
   },
   methods: {
+    // 서버 통신 GET
     API_CALL_GET(url, callback) {
       callback = callback || function () {};
 
@@ -39,6 +40,7 @@ export default {
           console.log(err);
         });
     },
+    // 서버 통신 POST
     API_CALL_POST(url, param, callback) {
       callback = callback || function () {};
 
