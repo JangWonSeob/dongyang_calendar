@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="x in list">
+        <tr v-for="x in list" :key="x.id">
           <td>{{ x.email }}</td>
           <td>{{ x.name }}</td>
           <!-- <td><button type="button" @click="updateUser">수정</button></td> -->
