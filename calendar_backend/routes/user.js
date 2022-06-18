@@ -7,25 +7,7 @@ const { getToken, verify } = require("../util/jwt-util");
 const { isLogin, getUserId } = require("../util/login-util");
 const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
 
-// const { auth } = require("../middleware/auth");
-
-//=================================
-//             User
-//=================================
-
-// router.get("/auth", auth, (req, res) => {
-//   res.status(200).json({
-//     _id: req.user._id,
-//     isAdmin: req.user.role === 0 ? false : true,
-//     isAuth: true,
-//     email: req.user.email,
-//     name: req.user.name,
-//     lastname: req.user.lastname,
-//     role: req.user.role,
-//     image: req.user.image,
-//   });
-// });
-
+// 권한 체크
 router.get("/auth", (req, res) => {
   console.log(req.headers);
   req.headers = req.headers || {};
@@ -51,6 +33,7 @@ router.get("/auth", (req, res) => {
   );
 });
 
+// 회원가입 - 모든 유저
 router.post("/register", (req, res) => {
   // console.log(req.body);
 
@@ -79,6 +62,7 @@ router.post("/register", (req, res) => {
   }
 });
 
+// 회원 추가(팀원) - 로그인한 유저
 router.post("/add", isLogin, (req, res) => {
   // console.log(req.body);
 
@@ -111,6 +95,7 @@ router.post("/add", isLogin, (req, res) => {
   });
 });
 
+// 로그인 - 모든 유저
 router.post("/login", (req, res) => {
   console.log(req.body.password);
 
@@ -139,6 +124,7 @@ router.post("/login", (req, res) => {
   });
 });
 
+// 회원 목록(팀원) - 로그인한 유저
 router.get("/list", isLogin, (req, res) => {
   getUserId(req, (userId) => {
     User.find({ parentsId: Object(userId), role: "user2" }, (err, list) => {
@@ -149,6 +135,7 @@ router.get("/list", isLogin, (req, res) => {
   });
 });
 
+// 회원 삭제(팀원) - 로그인한 유저
 router.get("/delete", isLogin, (req, res) => {
   const { id } = req.query;
   getUserId(req, (userId) => {

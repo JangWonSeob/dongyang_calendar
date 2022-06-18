@@ -4,10 +4,8 @@ const { Calendar } = require("../modules/calendar");
 const { isLogin, getUserId } = require("../util/login-util");
 const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
 
+// 저장 API - 로그인한 유저
 router.post("/save", isLogin, (req, res) => {
-  console.log(req.body);
-  console.log("call save");
-
   getUserId(req, (userId, parentsId, role) => {
     const key = userId;
     if (role === "user2") {
@@ -23,9 +21,8 @@ router.post("/save", isLogin, (req, res) => {
   });
 });
 
+// 목록 API - 로그인한 유저
 router.get("/list", isLogin, (req, res) => {
-  console.log(req.body.searchStartDate);
-
   getUserId(req, (userId, parentsId, role) => {
     let key = userId;
 
@@ -50,7 +47,7 @@ router.get("/list", isLogin, (req, res) => {
   });
 });
 
-// detail 메서드
+// 단건 API - 로그인한 유저
 router.get("/detail", isLogin, (req, res) => {
   const { id } = req.query;
 
@@ -65,7 +62,7 @@ router.get("/detail", isLogin, (req, res) => {
   });
 });
 
-// 수정 메서드
+// 수정 API - 로그인한 유저
 router.post("/update", isLogin, (req, res) => {
   const { id } = req.body;
 
@@ -96,7 +93,7 @@ router.post("/update", isLogin, (req, res) => {
   });
 });
 
-// 삭제 메서드
+// 삭제 API - 로그인한 유저
 router.get("/delete", isLogin, (req, res) => {
   const { id } = req.query;
 

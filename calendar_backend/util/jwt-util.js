@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/serverConfig");
 
 module.exports = {
+  // 토큰 생성
   getToken: (user) => {
-    // 토큰 생성
     const payload = {
       id: user.id || "",
       name: user.name || "",
@@ -16,8 +16,8 @@ module.exports = {
       expiresIn: "1h",
     });
   },
+  // 검증
   verify: (token, callback) => {
-    // 검증
     callback = callback || function () {};
     jwt.verify(token, config.SECRET_KEY, (err, info) => {
       if (err) {

@@ -1,5 +1,5 @@
 const isEmpty = (text) => {
-  if (text === null || text === undefined) {
+  if (text === null || text === undefined || text === "") {
     return true;
   }
 
