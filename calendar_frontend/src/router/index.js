@@ -46,6 +46,20 @@ const routes = [
       ),
     meta: { authRequired: "loginUser" },
   },
+  {
+    path: "/user/list",
+    name: "UserList",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/user/UserList.vue"),
+    meta: { authRequired: "loginUser" },
+  },
+  {
+    path: "/user/add",
+    name: "UserAdd",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/user/UserAdd.vue"),
+    meta: { authRequired: "loginUser" },
+  },
 ];
 
 const router = createRouter({

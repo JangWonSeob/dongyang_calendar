@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { User } = require("../modules/user");
 const { getToken, verify } = require("../util/jwt-util");
+const { isLogin, getUserId } = require("../util/login-util");
 const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
 
 // const { auth } = require("../middleware/auth");
@@ -78,6 +79,38 @@ router.post("/register", (req, res) => {
   }
 });
 
+router.post("/add", isLogin, (req, res) => {
+  // console.log(req.body);
+
+  getUserId(req, (userId, parentsId, role) => {
+    if (role !== "user") {
+      return jsonFail(res, "권한이 없습니다.");
+    }
+    User.findOne({ email: req.body.email }, (err, user) => {
+      if (err) return jsonFail(res, err.message);
+
+      if (user) return jsonFail(res, "이미 존재하는 이메일입니다.");
+
+      bcrypt.genSalt(saltRounds, (err, salt) => {
+        console.log(req.body.password);
+        if (err) return jsonFail(res, err);
+        bcrypt.hash(req.body.password, salt, function (err, hash) {
+          if (err) return jsonFail(res, err);
+          req.body.password = hash;
+          req.body.parentsId = userId;
+          req.body.role = "user2";
+          const user = new User(req.body);
+          console.log("save?");
+          user.save((err, doc) => {
+            if (err) return jsonFail(res, err);
+            return jsonSuccess(res);
+          });
+        });
+      });
+    });
+  });
+});
+
 router.post("/login", (req, res) => {
   console.log(req.body.password);
 
@@ -96,6 +129,8 @@ router.post("/login", (req, res) => {
         return jsonSuccessInfo(res, {
           accessToken: getToken(user),
           userName: user.name,
+          role: user.role,
+          isUser: user.role === "user" ? true : false,
         });
       } else {
         return jsonFail(res, "비밀번호가 일치하지 않습니다.");
@@ -104,17 +139,27 @@ router.post("/login", (req, res) => {
   });
 });
 
-// router.get("/logout", auth, (req, res) => {
-//   User.findOneAndUpdate(
-//     { _id: req.user._id },
-//     { token: "", tokenExp: "" },
-//     (err, doc) => {
-//       if (err) return res.json({ success: false, err });
-//       return res.status(200).send({
-//         success: true,
-//       });
-//     }
-//   );
-// });
+router.get("/list", isLogin, (req, res) => {
+  getUserId(req, (userId) => {
+    User.find({ parentsId: Object(userId), role: "user2" }, (err, list) => {
+      if (err) return jsonFail(res, err.message);
+      console.log("list: " + list);
+      return jsonSuccessInfo(res, list);
+    });
+  });
+});
+
+router.get("/delete", isLogin, (req, res) => {
+  const { id } = req.query;
+  getUserId(req, (userId) => {
+    User.deleteOne(
+      { _id: Object(id), parentsId: Object(userId), role: "user2" },
+      (err) => {
+        if (err) return jsonFail(res, err.message);
+        return jsonSuccess(res);
+      }
+    );
+  });
+});
 
 module.exports = router;

@@ -51,9 +51,12 @@ export default {
           alert(message);
           return false;
         }
+        console.log("data login", data);
         // 세션 스토리지에 저장
         sessionStorage.setItem("accessToken", data.accessToken || "");
         sessionStorage.setItem("userName", data.userName || "");
+        sessionStorage.setItem("role", data.role || "");
+        sessionStorage.setItem("isUser", data.isUser || false);
         this.$router.push({ path: "/calendar/list" });
       });
     },

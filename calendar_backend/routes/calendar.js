@@ -3,14 +3,17 @@ const router = express.Router();
 const { Calendar } = require("../modules/calendar");
 const { isLogin, getUserId } = require("../util/login-util");
 const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
-const moment = require("moment");
 
 router.post("/save", isLogin, (req, res) => {
   console.log(req.body);
   console.log("call save");
 
-  getUserId(req, (userId) => {
-    req.body.userId = userId;
+  getUserId(req, (userId, parentsId, role) => {
+    const key = userId;
+    if (role === "user2") {
+      key = parentsId;
+    }
+    req.body.userId = key;
     const calendar = new Calendar(req.body);
     console.log(calendar);
     calendar.save((err, doc) => {
@@ -23,10 +26,16 @@ router.post("/save", isLogin, (req, res) => {
 router.get("/list", isLogin, (req, res) => {
   console.log(req.body.searchStartDate);
 
-  getUserId(req, (userId) => {
+  getUserId(req, (userId, parentsId, role) => {
+    let key = userId;
+
+    if (role === "user2") {
+      key = parentsId;
+    }
+
     Calendar.find(
       {
-        userId: Object(userId),
+        userId: Object(key),
       },
       (err, list) => {
         if (err) {
@@ -62,8 +71,12 @@ router.post("/update", isLogin, (req, res) => {
 
   console.log(req.body);
 
-  getUserId(req, (userId) => {
-    req.body.userId = userId;
+  getUserId(req, (userId, parentsId, role) => {
+    const key = userId;
+    if (role === "user2") {
+      key = parentsId;
+    }
+    req.body.userId = key;
 
     let param = {};
     if (req.body.title) param.title = req.body.title;

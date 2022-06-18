@@ -52,6 +52,8 @@ export default {
     logout() {
       sessionStorage.removeItem("accessToken");
       sessionStorage.removeItem("userName");
+      sessionStorage.removeItem("isUser");
+      sessionStorage.removeItem("role");
       this.$router.push({ path: "/" });
     },
   },

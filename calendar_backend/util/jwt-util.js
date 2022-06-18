@@ -7,6 +7,7 @@ module.exports = {
     const payload = {
       id: user.id || "",
       name: user.name || "",
+      parentsId: user.parentsId || "",
       role: user.role || "",
     };
 
@@ -27,30 +28,4 @@ module.exports = {
       callback(true, "", info);
     });
   },
-  //   getRefreshToken: () => {
-  //     return jwt.sign({}, secret, {
-  //       algorithm: "HS256",
-  //       expiresIn: "14d",
-  //     });
-  //   },
-  //   refreshVerify: async (token, userId) => {
-  //     // refresh token 검증
-  //     const getAsync = promisify(redisClient.get).bind(redisClient);
-
-  //     try {
-  //       const data = await getAsync(userId); // refresh token 가져오기
-  //       if (token === data) {
-  //         try {
-  //           jwt.verify(token, secret);
-  //           return true;
-  //         } catch (err) {
-  //           return false;
-  //         }
-  //       } else {
-  //         return false;
-  //       }
-  //     } catch (err) {
-  //       return false;
-  //     }
-  //   },
 };

@@ -23,7 +23,7 @@ module.exports = {
   },
   getUserId: (req, callback) => {
     callback = callback || function () {};
-    console.log("call getUserId");
+    // console.log("call getUserId");
     // 토큰 생성
     // console.log(req.headers);
     req.headers = req.headers || {};
@@ -37,10 +37,10 @@ module.exports = {
       (result, message, info) => {
         if (!result) {
           // console.log(message);
-          callback("");
+          callback("", "", "");
         }
         console.log("info: ", info);
-        callback(info.id);
+        callback(info.id, info.parentsId, info.role);
       }
     );
   },

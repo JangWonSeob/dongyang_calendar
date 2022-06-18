@@ -1,15 +1,23 @@
 <template>
   <div>
-    <div class="text-end">
-      <label for="hiddenYn">주말 표시여부</label>
-      <input
-        id="hiddenYn"
-        type="checkbox"
-        ref="reference"
-        :checked="calendarOptions.weekends"
-        @change="handleWeekendsToggle"
-      />
+    <div style="display: flex; justify-content: space-between">
+      <span class="text-end">
+        <button type="button" v-if="isUser" @click="goAddUser">
+          유저 추가
+        </button>
+      </span>
+      <span class="text-end">
+        <label for="hiddenYn">주말 표시여부</label>
+        <input
+          id="hiddenYn"
+          type="checkbox"
+          ref="reference"
+          :checked="calendarOptions.weekends"
+          @change="handleWeekendsToggle"
+        />
+      </span>
     </div>
+
     <br />
     <FullCalendar
       v-if="!popupYn"
@@ -55,10 +63,12 @@ export default {
     },
   },
   mounted() {
+    this.isUser = sessionStorage.getItem("role") === "user" ? true : false;
     this.getList();
   },
   data() {
     return {
+      isUser: false,
       changeMonth: false,
       list: [],
       popupYn: false,
@@ -165,6 +175,9 @@ export default {
     handleEventClick(clickInfo) {
       this.param.id = clickInfo.event._def.publicId || "";
       this.openPopup(true);
+    },
+    goAddUser() {
+      this.$router.push({ path: "/user/list" });
     },
   },
 };
