@@ -3,7 +3,7 @@
     <div style="display: flex; justify-content: space-between">
       <span class="text-end">
         <button type="button" v-if="isUser" @click="goAddUser">
-          유저 추가
+          팀원 추가
         </button>
       </span>
       <span class="text-end">
@@ -30,6 +30,7 @@
       :endDate="param.endDate"
       :calendarId="param.id"
       :updateYn="param.updateYn"
+      :isUser="isUser"
       @popupYn="closePopup"
       @updateYn="changeStatus"
     />

@@ -52,7 +52,9 @@
           </div>
           <div v-else>
             <button type="submit">수정</button>
-            <button type="button" @click="deleteCalendar">삭제</button>
+            <button type="button" v-if="isUser" @click="deleteCalendar">
+              삭제
+            </button>
           </div>
         </form>
       </div>
@@ -83,6 +85,10 @@ export default {
       default: "",
     },
     updateYn: {
+      type: Boolean,
+      default: false,
+    },
+    isUser: {
       type: Boolean,
       default: false,
     },

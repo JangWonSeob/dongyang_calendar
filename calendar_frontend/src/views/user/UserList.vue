@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1>추가 유저 목록</h1>
+      <h1>팀원 목록</h1>
       <button type="button" @click="goPage">추가하기</button>
     </div>
 
@@ -10,7 +10,7 @@
       <thead>
         <tr>
           <th>이메일</th>
-          <th>유저 이름</th>
+          <th>팀원 이름</th>
           <th>비고</th>
         </tr>
       </thead>

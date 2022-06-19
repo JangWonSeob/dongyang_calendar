@@ -9,7 +9,6 @@ const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
 
 // 권한 체크
 router.get("/auth", (req, res) => {
-  console.log(req.headers);
   req.headers = req.headers || {};
   req.headers.authorization =
     req.headers.authorization == undefined ? "" : req.headers.authorization;
@@ -20,10 +19,8 @@ router.get("/auth", (req, res) => {
     req.headers.authorization.split("Bearer ")[1] || "",
     (result, message, info) => {
       if (!result) {
-        console.log(message);
         return jsonFail(res, "로그인 후 이용 가능합니다.");
       }
-      console.log("info: ", info);
       return jsonSuccessInfo(res, {
         id: info.id,
         name: info.name,
@@ -35,8 +32,6 @@ router.get("/auth", (req, res) => {
 
 // 회원가입 - 모든 유저
 router.post("/register", (req, res) => {
-  // console.log(req.body);
-
   if (req.body.password !== undefined && req.body.password !== "") {
     User.findOne({ email: req.body.email }, (err, user) => {
       if (err) return jsonFail(res, err.message);
@@ -44,7 +39,6 @@ router.post("/register", (req, res) => {
       if (user) return jsonFail(res, "이미 존재하는 이메일입니다.");
 
       bcrypt.genSalt(saltRounds, (err, salt) => {
-        console.log(req.body.password);
         if (err) return jsonFail(res, err);
         bcrypt.hash(req.body.password, salt, function (err, hash) {
           if (err) return jsonFail(res, err);
@@ -64,8 +58,6 @@ router.post("/register", (req, res) => {
 
 // 회원 추가(팀원) - 로그인한 유저
 router.post("/add", isLogin, (req, res) => {
-  // console.log(req.body);
-
   getUserId(req, (userId, parentsId, role) => {
     if (role !== "user") {
       return jsonFail(res, "권한이 없습니다.");

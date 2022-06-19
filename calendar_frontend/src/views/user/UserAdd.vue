@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>추가 유저 정보 입력</h1>
+    <h1>팀원 정보 입력</h1>
     <form @submit.prevent="add">
       <div>
         <label for="email">이메일</label>
@@ -30,7 +30,7 @@
           required
         />
       </div>
-      <button type="submit">회원가입</button>
+      <button type="submit">추가하기</button>
     </form>
   </div>
 </template>
@@ -70,7 +70,7 @@ export default {
           return false;
         }
 
-        alert("성공적으로 회원을 추가하였습니다.");
+        alert("성공적으로 팀원을 추가하였습니다.");
         this.$router.push({ path: "/user/list" });
       });
     },

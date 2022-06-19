@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
     type: String,
     minglength: 5,
   },
-  // 부모 ID
+  // 팀장 ID
   parentsId: {
     type: Schema.Types.ObjectId,
   },

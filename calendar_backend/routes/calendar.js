@@ -8,6 +8,7 @@ const { jsonSuccess, jsonSuccessInfo, jsonFail } = require("../model/result");
 router.post("/save", isLogin, (req, res) => {
   getUserId(req, (userId, parentsId, role) => {
     const key = userId;
+    // 만약 팀원 아이디라면 팀장 아이디로 저장
     if (role === "user2") {
       key = parentsId;
     }
@@ -26,6 +27,7 @@ router.get("/list", isLogin, (req, res) => {
   getUserId(req, (userId, parentsId, role) => {
     let key = userId;
 
+    // 만약 팀원 아이디라면 팀장 아이디로 저장
     if (role === "user2") {
       key = parentsId;
     }
@@ -66,10 +68,9 @@ router.get("/detail", isLogin, (req, res) => {
 router.post("/update", isLogin, (req, res) => {
   const { id } = req.body;
 
-  console.log(req.body);
-
   getUserId(req, (userId, parentsId, role) => {
     const key = userId;
+    // 만약 팀원 아이디라면 팀장 아이디로 저장
     if (role === "user2") {
       key = parentsId;
     }
